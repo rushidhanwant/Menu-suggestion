@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from app.config import config
 
 load_dotenv(config.env_path)
-print(config.env_path, "   ", config.root_dir)
 
 
 def scale_ingredients(ingredients: str, yields: str, servings: str ):
@@ -25,34 +24,54 @@ def scale_ingredients(ingredients: str, yields: str, servings: str ):
     and provide the scaled ingredients as output. 
     
     NOTE- Make sure to check the original ingredients are for how many people and then only scale it to the provided number.
-        Only provide the scaled ingredients as output.
+        Only provide the scaled ingredients as output and do not provide the steps.
     """
 
-    prompt = ChatPromptTemplate.from_template(template)
-    model = ChatOpenAI(model_name="gpt-3.5-turbo")
-    chain = prompt | model
-    result = chain.invoke({"ingredients": ingredients, "yields": yields, "servings": servings})
+    result = ""
+
+    try:
+        prompt = ChatPromptTemplate.from_template(template)
+        model = ChatOpenAI(model_name="gpt-3.5-turbo")
+        chain = prompt | model
+        result = chain.invoke({"ingredients": ingredients, "yields": yields, "servings": servings})
+    except:
+        result = "some error occurred"
+
     return result
 
-def menu_suggestion(ingredients):
+
+def menu_suggestion(ingredients: str, servings: str):
     template = f"""
         You are expert at suggesting recipe based on the ingredients provided to you.
         
-        you will be given list of ingredients delimited by ```. Your job is to suggest the menu based on the ingredients 
-        provided to you. Make sure that menu should contain at least 3 dishes.
+        you will be given list of ingredients delimited by ``` and servings delimited by <>. Your job is to suggest the menu based on the ingredients 
+        provided to you for given servings. Make sure that menu should contain at least 3 dishes and you have to provide instructions for each dish.
         
+       output should be the below format.
+       Recipe name 
+       Ingredients List 
+       Instructions
+       
         ```{ingredients}```
+        <{servings}>
         """
-    prompt = ChatPromptTemplate.from_template(template)
-    model = ChatOpenAI(model_name="gpt-3.5-turbo")
-    chain = prompt | model
-    result = chain.invoke({"ingredients": ingredients})
+
+    result = ""
+
+    try:
+        prompt = ChatPromptTemplate.from_template(template)
+        model = ChatOpenAI(model_name="gpt-3.5-turbo")
+        chain = prompt | model
+        result = chain.invoke({"ingredients": ingredients, "servings": servings})
+    except:
+        result = "some error occurred"
+
     return result
 
 
 def suggest_menu(recipe):
 
     scaled_version = scale_ingredients(recipe.ingredients, recipe.yields, recipe.servings)
-    suggested_menu = menu_suggestion(scaled_version)
-    return suggested_menu
+    suggested_menu = menu_suggestion(scaled_version, recipe.servings)
+    return {"scaled_recipe":scaled_version, "suggested_menu": suggested_menu}
 
