@@ -106,7 +106,7 @@ Response - scaled ingredients and suggested menu by GPT
     6. <text>
     and many more
     
-    I have cases where there were mixed fractions, whole number, fractions at 
+    I have handled cases where there were mixed fractions, whole number, fractions at 
     the start of the text. 
     Handling each and every case was very time consuming and there could be more possibilities of way
     ingredients can be written.
