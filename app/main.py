@@ -35,7 +35,6 @@ async def root():
     return {"message": "Hello World"}
 
 
-
 @app.post("/scrape_recipe")
 async def scrape_recipe_route(link: ScrapeLink):
     result = scrape_recipe_handler(link.link)

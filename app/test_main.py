@@ -1,9 +1,11 @@
 import json
 
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
+from app import main
 from app.main import app
-from app.mock_data import mock_suggestion_data
+from app.mock_data import mock_suggestion_data, mock_scraper, mock_scraper_response, mock_suggestion_response
 
 client = TestClient(app)
 
@@ -13,18 +15,21 @@ def test_invalid_input():
     assert response.status_code == 422
 
 
-def test_valid_input():
+def test_valid_input(monkeypatch):
+    monkeypatch.setattr(main, "scrape_recipe_handler", mock_scraper)
     response = client.post("/scrape_recipe", headers={"Content-Type": "application/json"},
                            data=json.dumps({"link": "https://www.wellplated.com/korean-beef-bowl/"}))
     assert response.status_code == 200
-    assert response.json()["author"] == "Erin Clarke"
+    print(response.json())
+    assert response.json()["detail"]["author"] == "Erin Clarke"
 
 
-def test_get_ingredients():
+def test_get_ingredients(monkeypatch):
+    monkeypatch.setattr(main, "scrape_recipe_handler", mock_scraper_response)
     response = client.post("/scrape_recipe", headers={"Content-Type": "application/json"},
                            data=json.dumps({"link": "https://www.wellplated.com/korean-beef-bowl/"}))
     assert response.status_code == 200
-    assert response.json()["ingredients"] == [
+    assert response.json()["detail"]["ingredients"] == [
         "1 pound lean ground beef ((I used 93% lean))",
         "3 tablespoons low sodium soy sauce (plus additional to taste, divided)",
         "1 1/4 cups minced scallions (both green and white parts (from about 1 small bundle), divided)",
@@ -41,7 +46,8 @@ def test_get_ingredients():
     ]
 
 
-def test_get_scaled_menu():
+def test_get_scaled_menu(monkeypatch):
+    monkeypatch.setattr(main, "suggest_menu", mock_suggestion_response)
     payload = {
         "servings": "9",
         "ingredients": [
@@ -65,10 +71,11 @@ def test_get_scaled_menu():
     response = client.post("/get_menu_suggestion", headers={"Content-Type": "application/json"},
                            data=json.dumps(payload))
     assert response.status_code == 200
-    assert response.json()["scaled_recipe"]["content"] == mock_suggestion_data()["scaled_recipe"]["content"]
+    assert response.json()["detail"]["scaled_recipe"]["content"] == mock_suggestion_data()["scaled_recipe"]["content"]
 
 
-def test_get_menu_suggestion():
+def test_get_menu_suggestion(monkeypatch):
+    monkeypatch.setattr(main, "suggest_menu", mock_suggestion_response)
     payload = {
         "servings": "9",
         "ingredients": [
@@ -92,4 +99,4 @@ def test_get_menu_suggestion():
     response = client.post("/get_menu_suggestion", headers={"Content-Type": "application/json"},
                            data=json.dumps(payload))
     assert response.status_code == 200
-    assert response.json()["scaled_recipe"]["content"] == mock_suggestion_data()["suggested_menu"]["content"]
+    assert response.json()["detail"]["suggested_menu"]["content"] == mock_suggestion_data()["suggested_menu"]["content"]
