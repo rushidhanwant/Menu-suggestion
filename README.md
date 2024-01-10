@@ -113,5 +113,7 @@ Response - scaled ingredients and suggested menu by GPT
     Hence i have implemented scaling ingredients part using GPT which covers most of the edge cases.
 ```
 
+## API Documentation
+The API documentation for the FastAPI services is automatically generated using Swagger UI. To access the API documentation, open your web browser and go to https://convai.lv.launchventures.co/api/docs after starting the FastAPI server.
 
 
