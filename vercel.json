@@ -1,14 +1,15 @@
 {
+  "devCommand": "uvicorn app.main:app --host 127.0.0.1 --port 8081 --reload",
   "builds": [
     {
-      "src": "./app/main.py",
+      "src": "app/main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "./app/main.py"
+      "dest": "app/main.py"
     }
   ]
 }
