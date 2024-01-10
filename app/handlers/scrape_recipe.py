@@ -8,8 +8,6 @@ def scrape_recipe_handler(link: str):
     scrapper = {}
     try:
         scraper = scrape_me(link, wild_mode=True)
-        data["ingredients"] = scraper.ingredients()
-        data["instructions"] = scraper.instructions()
     except Exception as e:
         return {"error": e, "message": "something went wrong"}
 
