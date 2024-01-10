@@ -35,8 +35,8 @@ def scale_ingredients(ingredients: str, yields: str, servings: str ):
         model = ChatOpenAI(model_name="gpt-3.5-turbo")
         chain = prompt | model
         result = chain.invoke({"ingredients": ingredients, "yields": yields, "servings": servings})
-    except:
-        result = "some error occurred"
+    except Exception as e:
+        result = f"some error occurred {e}"
 
     return result
 
@@ -65,8 +65,8 @@ def menu_suggestion(ingredients: str, servings: str):
         model = ChatOpenAI(model_name="gpt-3.5-turbo")
         chain = prompt | model
         result = chain.invoke({"ingredients": ingredients, "servings": servings})
-    except:
-        result = "some error occurred"
+    except Exception as e:
+        result = f"some error occurred {e}"
 
     return result
 
