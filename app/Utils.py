@@ -45,6 +45,7 @@ def extract_string(input_string: str):
     else:
         print("No match found.")
 
-print(convert_mixed_to_simple_fraction(extract_number("1 1/5 tablespoons low sodium soy sauce (plus additional to taste, divided)"),"2/2"))
+
+# print(convert_mixed_to_simple_fraction(extract_number("1 1/5 tablespoons low sodium soy sauce (plus additional to taste, divided)"),"2/2"))
 
 # extract_string("1 tablespoons low sodium soy sauce (plus additional to taste, divided)")

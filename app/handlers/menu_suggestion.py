@@ -8,6 +8,7 @@ load_dotenv(config.env_path)
 
 
 def scale_ingredients(ingredients: str, yields: str, servings: str ):
+    # prompt template for scaling ingredients.
     template = f"""
     You are expert at scaling ingredients provided to you .
     You will be provided with the ingredients yield for the recipe .
@@ -41,6 +42,7 @@ def scale_ingredients(ingredients: str, yields: str, servings: str ):
 
 
 def menu_suggestion(ingredients: str, servings: str):
+    # prompt template for menu suggestion.
     template = f"""
         You are expert at suggesting recipe based on the ingredients provided to you.
         
@@ -70,6 +72,9 @@ def menu_suggestion(ingredients: str, servings: str):
 
 
 def suggest_menu(recipe):
+    # scale_ingredients will first scale the ingredients based on the servings
+    # once we get the scaled ingredients' menu_suggestion function will suggest menu based on the ingredients
+    # provided to the function.
 
     scaled_version = scale_ingredients(recipe.ingredients, recipe.yields, recipe.servings)
     suggested_menu = menu_suggestion(scaled_version, recipe.servings)
