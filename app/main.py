@@ -17,7 +17,7 @@ security = HTTPBasic()
 
 load_dotenv(config.env_path)
 
-app = FastAPI(openapi_url="/openapi.json")
+app = FastAPI(openapi_url="/api/openapi.json")
 
 origins = ["*"]
 
@@ -33,6 +33,7 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 
 @app.post("/scrape_recipe")
